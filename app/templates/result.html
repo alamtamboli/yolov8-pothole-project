@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detection Results</title>
+</head>
+<body>
+    <h1>Pothole Detection Results</h1>
+    <img src="{{ url_for('static', filename=filename.replace('static/', '', 1)) }}" alt="Pothole Detection">
+    <br>
+    <a href="{{ url_for('index') }}">Upload another image</a>
+</body>
+</html>

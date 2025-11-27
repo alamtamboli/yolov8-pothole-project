@@ -1,0 +1,9 @@
+{
+    "detections": [
+        {
+            "label": "Pothole",
+            "conf": 82.61
+        }
+    ],
+    "total": 1
+}

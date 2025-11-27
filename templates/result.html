@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pothole Detection Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 30px;
+        }
+        h1 { color: #222; }
+        .image-container {
+            margin: 20px auto;
+            display: inline-block;
+        }
+        img {
+            max-width: 650px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .summary {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .summary h2 {
+            color: #444;
+            margin-bottom: 10px;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 70%;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) { background: #f2f2f2; }
+        a {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        a:hover { text-decoration: underline; }
+        .gps {
+            margin-top: 25px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        #map {
+            height: 300px;
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+        .map-link {
+            margin-top: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛣️ Pothole Detection Result</h1>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='results/' ~ filename) }}"
+             alt="Detection Result"
+             class="img-fluid shadow rounded">
+    </div>
+
+    <div class="summary">
+        <h2>Total Potholes Detected: {{ detections|length }}</h2>
+
+        {% if detections %}
+        <table>
+            <tr>
+                <th>Label</th>
+                <th>Confidence (%)</th>
+            </tr>
+            {% for det in detections %}
+            <tr>
+                <td>{{ det.label }}</td>
+                <td>{{ det.conf }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style="color: #888;">No potholes detected in this image.</p>
+        {% endif %}
+    </div>
+
+    <div class="gps">
+        <h3>📍 Location Details</h3>
+        {% if latitude and longitude %}
+            <p><strong>Latitude:</strong> {{ latitude }}</p>
+            <p><strong>Longitude:</strong> {{ longitude }}</p>
+            <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query={{ latitude }},{{ longitude }}" target="_blank">
+                🌍 Open in Google Maps
+            </a>
+
+            <div id="map"></div>
+        {% else %}
+            <p style="color: red;">⚠️ No GPS metadata available. Showing dummy coordinates.</p>
+        {% endif %}
+    </div>
+
+    <a href="/">⬅️ Upload Another Image</a>
+    <a href="/history">View Detection History</a>
+
+    {% if latitude and longitude %}
+    <script>
+        function initMap() {
+            var location = {lat: {{ latitude }}, lng: {{ longitude }} };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: location
+            });
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: "Pothole Location"
+            });
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+    </script>
+    {% endif %}
+</body>
+</html>

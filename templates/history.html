@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pothole Detection History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 30px;
+        }
+        h1 { color: #222; }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .dummy-loc {
+            color: red;
+        }
+        .real-loc {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>📋 Pothole Detection History</h1>
+    <div class="container">
+        {% if records %}
+            <table>
+                <tr>
+                    <th>Image</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>GPS Type</th>
+                    <th>Timestamp</th>
+                    <th>Map</th>
+                </tr>
+                {% for record in records %}
+                <tr>
+                    <td><img src="{{ url_for('static', filename='results/' ~ record.image_path) }}" alt="Pothole" style="max-width: 100px;"></td>
+                    <td>{{ record.latitude }}</td>
+                    <td>{{ record.longitude }}</td>
+                    <td class="{% if record.is_dummy %}dummy-loc{% else %}real-loc{% endif %}">
+                        {% if record.is_dummy %}Dummy{% else %}Real{% endif %}
+                    </td>
+                    <td>{{ record.timestamp }}</td>
+                    <td>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ record.latitude }},{{ record.longitude }}" target="_blank">
+                            View on Map
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No pothole detections have been recorded yet.</p>
+        {% endif %}
+    </div>
+    <a href="/">⬅️ Go Back to Upload</a>
+</body>
+</html>

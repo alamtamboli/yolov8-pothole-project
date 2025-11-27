@@ -1,0 +1,8 @@
+train: C:/Users/ALAM/PycharmProjects/yolov8project/yolov8-pothole-project/dataset/train/images
+val: C:/Users/ALAM/PycharmProjects/yolov8project/yolov8-pothole-project/dataset/valid/images
+test: C:/Users/ALAM/PycharmProjects/yolov8project/yolov8-pothole-project/dataset/test/images
+
+nc: 1
+names: ['Pothole']
+
+

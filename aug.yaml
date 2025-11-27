@@ -1,0 +1,56 @@
+# Custom YOLOv8 training config with augmentations
+
+# Dataset
+data: data.yaml   # path to dataset.yaml
+
+# Model
+model: yolov8n.pt  # you can change to yolov8s.pt, yolov8m.pt etc.
+
+# Training
+epochs: 100
+imgsz: 640
+batch: 8
+
+# Augmentations
+fliplr: 0.5       # 50% chance left-right flip
+flipud: 0.2       # 20% chance upside-down flip
+degrees: 10       # random rotation ±10°
+scale: 0.5        # zoom in/out
+translate: 0.2    # shift image by 20%
+hsv_h: 0.015      # hue variation
+hsv_s: 0.7        # saturation variation
+hsv_v: 0.4        # brightness variation
+
+# Save evaluation metrics
+save_json: True    # saves COCO-style metrics (precision, recall, mAP)
+plots: True        # saves graphs (PR curves, confusion matrix, F1 curve)
+
+# Custom callback
+callbacks:
+  - _type_: "on_fit_epoch_end"
+    function: |
+      import pandas as pd, os
+      from ultralytics.utils import LOGGER
+
+      def on_fit_epoch_end(trainer):
+          results = trainer.metrics
+          if results:
+              # Extract metrics
+              precision = results.get('precision', None)
+              recall = results.get('recall', None)
+              map50 = results.get('map50', None)
+              map50_95 = results.get('map', None)
+              f1 = (2 * precision * recall / (precision + recall + 1e-16)) if precision and recall else None
+              
+              # Save into CSV
+              out_dir = trainer.save_dir
+              file_path = os.path.join(out_dir, "final_metrics.csv")
+              df = pd.DataFrame([{
+                  "Precision": precision,
+                  "Recall": recall,
+                  "F1": f1,
+                  "mAP50": map50,
+                  "mAP50-95": map50_95
+              }])
+              df.to_csv(file_path, index=False)
+              LOGGER.info(f"✅ Final metrics saved to {file_path}")

@@ -1,0 +1,13 @@
+{
+    "detections": [
+        {
+            "label": "Pothole",
+            "conf": 72.01
+        },
+        {
+            "label": "Pothole",
+            "conf": 31.82
+        }
+    ],
+    "total": 2
+}

@@ -1,0 +1,33 @@
+{
+    "detections": [
+        {
+            "label": "Pothole",
+            "conf": 64.37
+        },
+        {
+            "label": "Pothole",
+            "conf": 61.22
+        },
+        {
+            "label": "Pothole",
+            "conf": 55.69
+        },
+        {
+            "label": "Pothole",
+            "conf": 41.2
+        },
+        {
+            "label": "Pothole",
+            "conf": 33.49
+        },
+        {
+            "label": "Pothole",
+            "conf": 32.51
+        },
+        {
+            "label": "Pothole",
+            "conf": 31.53
+        }
+    ],
+    "total": 7
+}
